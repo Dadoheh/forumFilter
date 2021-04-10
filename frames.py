@@ -3,15 +3,17 @@ import re
 
 
 def create_data():
-    file = open('DictOfNegativeWords.txt', 'w')
-    frame = pd.read_csv('train.csv')
+    file = open('DictOfNegativeWords.txt', 'w') # prawdopodobnie do wyrzucenia/ do modyfikacji
+    frame = pd.read_csv('train.csv', low_memory=True)
     dictionary, dictionary_bad = {}, {}
+    toxicitySeries = pd.Series(index=[], dtype=float)
 
     for i in range(len(frame) - 1, 0, -1):
         comment = frame.iloc[i]['comment_text']
         x = [word.strip(':,;"-_·()[]{}\n?!@|.') for word in comment.split()]
-        bad = frame.iloc[i]['toxic'] + frame.iloc[i]['severe_toxic'] + frame.iloc[i]['obscene'] + frame.iloc[i][
-            'threat'] + frame.iloc[i]['identity_hate'] + frame.iloc[i]['insult']
+        bad = (frame.iloc[i]['toxic'] + frame.iloc[i]['severe_toxic']
+               + frame.iloc[i]['obscene'] + frame.iloc[i][
+            'threat'] + frame.iloc[i]['identity_hate'] + frame.iloc[i]['insult'])
         for j in range(len(x)):
             slowo = x[j].lower()
             if slowo != '':
@@ -26,11 +28,17 @@ def create_data():
                     else:
                         dictionary_bad[slowo] = 0
     for key in dictionary.keys():
-        result = str((key, float(dictionary_bad[key] / dictionary[key])))
-        file.write(result)
-        #print(result)
+        #result = str((key, float(dictionary_bad[key] / dictionary[key])))
+        # file.write(result)
+
+        toxicityRatio = float(dictionary_bad[key] / dictionary[key])
+        toxicitySeries[key] = toxicityRatio
+
     file.close()
     print("Długość zapisywanego słownika {}".format(len(dictionary)))
+
+    toxicitySeries.pd.to_csv('savedWord.csv')
+    return toxicitySeries
 
 
 def read_data_from_file():
@@ -50,8 +58,13 @@ def read_data_from_file():
     return len(outputDict), outputDict
 
 
-print(read_data_from_file())
-#create_dataa()
+#print(read_data_from_file())
+print(create_data())
+
+
+# def save_data_to_csv(file_csv):
+
+
 
 """
 TODO-
