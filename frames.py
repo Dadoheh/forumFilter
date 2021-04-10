@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-
+import numpy as np
 
 def create_data():
     file = open('DictOfNegativeWords.txt', 'w') # prawdopodobnie do wyrzucenia/ do modyfikacji
@@ -37,7 +37,7 @@ def create_data():
     file.close()
     print("Długość zapisywanego słownika {}".format(len(dictionary)))
 
-    toxicitySeries.pd.to_csv('savedWord.csv')
+    toxicitySeries.to_csv('savedWord.csv')
     return toxicitySeries
 
 
