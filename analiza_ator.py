@@ -50,4 +50,5 @@ class analiza_ator:
 
 frame=pd.read_csv('savedWord.csv')
 
-analiza_ator.stats("i love you",frame)
+analiza_ator.stats("i am really proud of you however i want to fuck you",frame)
+

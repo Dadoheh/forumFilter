@@ -42,23 +42,6 @@ class DataCreating:
         toxicitySeries.to_csv('savedWord.csv')
         return toxicitySeries
 
-    @staticmethod
-    def read_data_from_file():  # to the modification
-        file = open('DictOfNegativeWords.txt', 'r')
-        outputNegative = file.read().split(')(')
-        print(type(outputNegative))
-        outputDict = {}
-
-        for i in range(len(outputNegative)):
-            temp = outputNegative[i]
-            key = re.search(r"'(.*?)'", temp)
-            variable = float(temp.split(', ')[1][:-1])
-            if key and variable:
-                key = key.group()
-                outputDict[str(key[1:-1])] = variable
-
-        return len(outputDict), outputDict
-
 
 class Voting:
     
@@ -83,17 +66,29 @@ class Voting:
                     " Avg toxicity = ", averageToxicity)
         return result
 
-
+    """@staticmethod    #metoda byBus
+    def analyse_byBus(comment, dictionary):
+        lst = analiza_ator.split_comment(comment)
+        max = 0
+        if len(lst) < 3:
+            max = analiza_ator.calc_mean(lst, dictionary)
+        for i in range(len(lst) - 2):
+            tmp = analiza_ator.calc_mean(lst[i:i + 2], dictionary)
+            if tmp > max:
+                max = tmp"""
+    #@staticmethod
+    #def analyse_byBus():
 
 toxicitySeries = pd.read_csv('savedWord.csv')
 
-#small tests
 
-sample = 'and i really like you'
-sample2 = 'fuck you motherfucker idiot'
+#small tests
+sample = 'i love hamburger'
+sample2 = 'i am really proud of you however i want to fuck you'
 sample3 = 'i am really proud of you'
 sample4 = 'fuck'
 #print(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sample].empty)
+
 
 print("Vulgarity factor: {}\n".format(Voting.voting(sample)))
 print("Vulgarity factor: {}\n".format(Voting.voting(sample2)))
@@ -101,4 +96,16 @@ print("Vulgarity factor: {}\n".format(Voting.voting(sample3)))
 print("Vulgarity factor: {}\n".format(Voting.voting(sample4)))
 
 
+"""
+TODO
+bybus - lokalne średnie
+obliczanie treshholdów - trzy treshholdy na sztywno
+
+Średnioterminowo 
+obliczanie treshholdów - heurystyka
+
+
+Długoterminowo:
+speech to text - do poszerzenia programu
+"""
 
