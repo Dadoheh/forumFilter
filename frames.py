@@ -1,5 +1,5 @@
 import pandas as pd
-import re
+#import re
 
 
 class DataCreating:
@@ -32,73 +32,117 @@ class DataCreating:
         for key in dictionary.keys():
             #result = str((key, float(dictionary_bad[key] / dictionary[key])))
             # file.write(result)
-
             toxicityRatio = float(dictionary_bad[key] / dictionary[key])
             toxicitySeries[key] = toxicityRatio
-
-        file.close()
+        file.close()    # to deletion
         print("Length of a dictionary {}".format(len(dictionary)))
-
         toxicitySeries.to_csv('savedWord.csv')
         return toxicitySeries
 
-    @staticmethod
-    def read_data_from_file():  # to the modification
-        file = open('DictOfNegativeWords.txt', 'r')
-        outputNegative = file.read().split(')(')
-        print(type(outputNegative))
-        outputDict = {}
-
-        for i in range(len(outputNegative)):
-            temp = outputNegative[i]
-            key = re.search(r"'(.*?)'", temp)
-            variable = float(temp.split(', ')[1][:-1])
-            if key and variable:
-                key = key.group()
-                outputDict[str(key[1:-1])] = variable
-
-        return len(outputDict), outputDict
-
 
 class Voting:
-    
+
+    toxicitySeries = pd.read_csv('savedWord.csv')
+
     @staticmethod
-    def voting(sample):
-        averageToxicity = 0.72  #  = toxicitySeries.mean()
+    def voting(sampleSplit):
+        averageToxicity = 0.72  # = toxicitySeries.mean()
         counter = 0
-        sampleSplit = (sample.split(' '))
+        if type(sampleSplit) is not list:
+            sampleSplit = (sampleSplit.split(' '))
         lenSampleSplit = len(sampleSplit)
-        print(sampleSplit)
+        #print("co to jest", sampleSplit)    # to remove
         for i in range(len(sampleSplit)):
-            if not (toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[i]].empty):
+            if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[i]].empty:
                 counter += float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[i], '0'].item())
             else: lenSampleSplit -= 1  # setting unknown word as not important
 
         toxicityOfWord = counter/lenSampleSplit
+
         if toxicityOfWord > averageToxicity:
             result = ("Bad sentence with ", toxicityOfWord, "toxicity ratio",
                     " Avg toxicity =", averageToxicity)
         else:
             result = ("Good sentence with ", toxicityOfWord, "toxicity ratio",
                     " Avg toxicity = ", averageToxicity)
+        byBus = Voting.analyse_by_bus(sampleSplit)
+        if byBus is not None:
+            result = ("Bad sentence with ", byBus, "toxicity ratio",
+                    " By local")
         return result
 
 
 
+    @staticmethod
+    def analyse_by_bus(sampleSplit):   # method will be refactored (by using checking_toxicity_from_one_bus(sampleSplit)
+        #sample = sample.split(' ')
+        dict_of_buses = {}         # not sure if we need it
+        counter, modulo = 0, 0
+
+        if len(sampleSplit) % 3 == 1: modulo = 1
+        elif len(sampleSplit) % 3 == 2: modulo = 2
+
+        for i in range(0, len(sampleSplit) - modulo, 3):
+            tmp = []
+            tmp.extend((sampleSplit[i], sampleSplit[i+1], sampleSplit[i+2]))
+            for j in range(len(tmp)):
+                if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == tmp[j]].empty:
+                    counter += float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == tmp[j], '0'].item())
+            #print(tmp) # to remove
+            if counter > 0.69:   # static threshold to be replaced with heuristic
+                return counter
+            else:
+                counter = 0
+        if modulo == 1:
+            print('modulo1')
+            if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[-1]].empty:
+                counter += float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[-1], '0'].item())
+            if counter > 0.69:  # static threshold to be replaced with heuristic
+                return counter
+        if modulo == 2:
+            print('modulo2')
+            for k in range(1, 3):
+                if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[-k]].empty:
+                    counter += float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[-k], '0'].item())
+            if counter > 0.69:  # static threshold to be replaced with heuristic
+                return counter
+
+    """@staticmethod    # to improve
+    def checking_toxicity_from_one_bus(sampleSplit):
+        if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit].empty:
+            return float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit, '0'].item())
+        else: return 0"""
+
+
 toxicitySeries = pd.read_csv('savedWord.csv')
 
-#small tests
 
-sample = 'and i really like you'
-sample2 = 'fuck you motherfucker idiot'
+
+#small tests
+sample = 'i love hamburger'
+sample2 = 'i am really proud of you however i want to love you you honey'
 sample3 = 'i am really proud of you'
 sample4 = 'fuck'
-#print(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sample].empty)
 
-print("Vulgarity factor: {}\n".format(Voting.voting(sample)))
+#print(Voting.analyse_by_bus(sample2))
+
+print("Vulgarity factor: {}\n".format(Voting.voting(sample2)))
 print("Vulgarity factor: {}\n".format(Voting.voting(sample2)))
 print("Vulgarity factor: {}\n".format(Voting.voting(sample3)))
 print("Vulgarity factor: {}\n".format(Voting.voting(sample4)))
 
 
+"""
+TODO
+bybus - lokalne średnie #FINISHED
+obliczanie treshholdów - trzy treshholdy na sztywno #FINISHED
+
+Średnioterminowo 
+obliczanie treshholdów - heurystyka
+zmiana lokalnych busów - np na 4, na 5, na 2
+
+Długoterminowo:
+speech to text - zamiana mowy na tekst i sprawdzenie toksyczności (do poszerzenia programu)
+
+"""
 
