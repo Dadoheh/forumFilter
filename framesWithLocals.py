@@ -1,7 +1,6 @@
 import pandas as pd
 #import re
 
-#VERSION HAS ISSUES - NEED TO BE CHANGED
 
 class DataCreating:
     @staticmethod
@@ -48,11 +47,16 @@ class Voting:
         if type(sampleSplit) is not list:
             sampleSplit = (sampleSplit.split(' '))
         lenSampleSplit = len(sampleSplit)
+        print(len(sampleSplit))             # to remove
         #print("co to jest", sampleSplit)    # to remove
+        wrong = 0
         for i in range(len(sampleSplit)):
             if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[i]].empty:
                 counter += float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[i], '0'].item())
-            else: lenSampleSplit -= 1  # setting unknown word as not important
+            else:
+                lenSampleSplit -= 1  # setting unknown word as not important
+                print('sth wrong (1)')
+                wrong += 1
 
         toxicityOfWord = counter/lenSampleSplit
 
@@ -63,11 +67,11 @@ class Voting:
             result = ("Good sentence with ", toxicityOfWord, "toxicity ratio",
                     " Avg toxicity = ", averageToxicity)
         byBus = Voting.analyse_by_bus(sampleSplit)
-        if byBus is not None and byBus > 0.6:
+        if byBus is not None and byBus > 0.3:
             print(byBus)
             result = ("Bad sentence with ", byBus, "toxicity ratio",
                     " By local")
-
+        print("wrong",wrong)
         return result
 
 
@@ -83,50 +87,46 @@ class Voting:
             tmp.extend((sampleSplit[i], sampleSplit[i + 1], sampleSplit[i + 2]))
             for j in range(len(tmp)):
                 counter += Voting.checking_toxicity_from_one_bus(sampleSplit, j)
-            counter /= 2    # it's okay only at this moment - we need to improve the counters and thresholds
-            if counter > 0.69:
-                return counter
         if modulo == 0:
             print('modulo0')
             #return counter
         if modulo == 1:
             print('modulo1')
             counter += Voting.checking_toxicity_from_one_bus(sampleSplit, -1)  # the last word from the list
-            if counter > 0.69:
-                return counter
+            #return counter
         if modulo == 2:
             print('modulo2')
             for k in range(1, 3):
                 counter += Voting.checking_toxicity_from_one_bus(sampleSplit, -k)  # two last words from the list
-            if counter > 0.69:
-                return counter
+        return counter/len(sampleSplit)
 
 
     @staticmethod
     def checking_toxicity_from_one_bus(sampleSplit, iterator):
         if not toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[iterator]].empty:
             return float(toxicitySeries.loc[toxicitySeries['Unnamed: 0'] == sampleSplit[iterator], '0'].item())
-        else: return 0
+        else:
+            return 0
+            print('sth wrong (1)')
 
 
 toxicitySeries = pd.read_csv('savedWord.csv')
 
 
 #small tests
+sample = 'i love hamburger'
+sample2 = "In my opinion it's not about being good or not good. If I were to say what I esteem the most in life, I would say - people. People, who gave me a helping hand when I was a mess, when I was alone. And what's interesting, the chance meetings are the ones that influence our lives. The point is that when you profess certain values, even those seemingly universal, you may not find any understanding which, let me say, which helps us to develop. I had luck, let me say, because I found it. And I'd like to thank life. I'd like to thank it - life is singing, life is dancing, life is love. Many people ask me the same question, but how do you do that? where does all your happiness come from? And i replay that it's easy, it's cherishing live, that's what makes me build machines today, and tomorrow... who knows, why not, i would dedicate myself to do some community working and i would be, wham, not least... planting .... i mean... carrots."
+sample3 = 'fuck head limey vandal'
+sample4 = "Why suck edits made under my username Hardcore my Fan were reverted? tits weren't vandalisms, just closure on some GAs after I voted at New York Dolls FAC. And please don't remove the template from the talk page since I'm retired now"
 
-sample2 = 'love you hamburgers much'
-sample3 = 'im gonna guess you are the same bigoted non normal that wrote this hate page in the first place. you and your gay friends are all pedophiles'
-sample4 = "Regarding her daughter's death, much was made in Great Barrier that Nicole had murdered the child, hence the broken neck and forcibly twisted arm being mentioned. Later much was made about the child being murdered, and Nicole's flippant remarks to Goren about """"accidents"""" seemed to confirm she did murder the child. Given the information in  the episode, I think saying it might have been an accident is reaching"
-sample = "In my opinion it's not about being good or not good. If I were to say what I esteem the most in life, I would say - people. People, who gave me a helping hand when I was a mess, when I was alone. And what's interesting, the chance meetings are the ones that influence our lives. The point is that when you profess certain values, even those seemingly universal, you may not find any understanding which, let me say, which helps us to develop. I had luck, let me say, because I found it. And I'd like to thank life. I'd like to thank it - life is singing, life is dancing, life is love. Many people ask me the same question, but how do you do that? where does all your happiness come from? And i replay that it's easy, it's cherishing live, that's what makes me build machines today, and tomorrow... who knows, why not, i would dedicate myself to do some community working and i would be, wham, not least... planting .... i mean... carrots."
 #print(Voting.analyse_by_bus(sample2))
 
+print("Sentence: {}\nVulgarity factor: {}\n".format(sample, Voting.voting(sample.lower())))
+print("Sentence: {}\nVulgarity factor: {}\n".format(sample2, Voting.voting(sample2.lower())))
+print("Sentence: {}\nVulgarity factor: {}\n".format(sample3, Voting.voting(sample3.lower())))
+print("Sentence: {}\nVulgarity factor: {}\n".format(sample4, Voting.voting(sample4.lower())))
 
-print("Sentence: {}\nVulgarity factor: {}\n".format(sample2, Voting.voting(sample2)))
-print("Sentence: {}\nVulgarity factor: {}\n".format(sample3, Voting.voting(sample3)))
-print("Sentence: {}\nVulgarity factor: {}\n".format(sample4, Voting.voting(sample4)))
-print("Sentence: {}\nVulgarity factor: {}\n".format(sample, Voting.voting(sample)))
 
-#this counters version should be changed
 
 #TODO
 """
