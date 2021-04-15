@@ -32,9 +32,10 @@ With those values prepared we make a decision whether the text is toxic or not.
 ## Roadmap
 
 - [x] **Start** 
-- [ ] **Working Version** :point_left: *We are working on this right now*
+- [x] **PrepareDB**
+- [x] **CalculateToxicity** 
+- [ ] **TrainDB** :point_left: *We are currently working on this*
 - [ ] **Word2Vec**
-- [ ] **Neural Network**
 - [ ] **GUI**
 - [ ] **Speech-to-text**
 - [ ] **Finish**
