@@ -1,4 +1,4 @@
-# The Forum Filter
+# :white_check_mark:The Forum Filter:negative_squared_cross_mark:
 
 ## About Project
 Project aim is to create a tool that recognizes **toxic behaviour** in any given comment.
