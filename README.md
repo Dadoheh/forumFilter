@@ -34,6 +34,7 @@ With those values prepared we make a decision whether the text is toxic or not.
 - [x] **Start** 
 - [ ] **Working Version** :point_left: *We are working on this right now*
 - [ ] **Word2Vec**
+- [ ] **Neural Network**
 - [ ] **GUI**
 - [ ] **Speech-to-text**
 - [ ] **Finish**
