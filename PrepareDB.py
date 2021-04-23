@@ -27,8 +27,6 @@ class DataCreating:
                         else:
                             dictionary_bad[any] = 0
         for key in dictionary.keys():
-            #result = str((key, float(dictionary_bad[key] / dictionary[key])))
-            # file.write(result)
             toxicityRatio = float(dictionary_bad[key] / dictionary[key])
             toxicitySeries[key] = toxicityRatio
         print("Length of a dictionary {}".format(len(dictionary)))
