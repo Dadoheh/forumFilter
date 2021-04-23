@@ -23,7 +23,7 @@ With those values prepared we make a decision whether the text is toxic or not.
  \
  `CalculateToxicity.py` is our tool that calculates the toxicity of given text and return decision: `TOXIC` or `NON-TOXIC`\
  \
- `TrainDB.py` uses heuristic algorithm to find optimal threshold for decision made in `CalculateToxicity.py`\
+ `TrainDB.py` uses smaller database `toxicBoardToTraining.csv` to find optimal threshold for decision made in `CalculateToxicity.py`\
  \
  `Comments.csv` core database, consists of comment of different lenght. Those comments are evaluated whether they are toxic. \
  \
