@@ -37,19 +37,14 @@ class Voting:
     def analyse_by_bus(sampleSplit):          
         counter = 0
         modulo = len(sampleSplit) % 3
-
         for i in range(0, len(sampleSplit) - modulo, 3):
             tmp = []
             tmp.extend((sampleSplit[i], sampleSplit[i + 1], sampleSplit[i + 2]))
             for j in range(len(tmp)):
                 counter += Voting.checking_toxicity_from_one_bus(sampleSplit, j)
-        if modulo == 0:
-            print('modulo0')
         if modulo == 1:
-            print('modulo1')
             counter += Voting.checking_toxicity_from_one_bus(sampleSplit, -1)  # the last word from the list
         if modulo == 2:
-            print('modulo2')
             for k in range(1, 3):
                 counter += Voting.checking_toxicity_from_one_bus(sampleSplit, -k)  # two last words from the list
         return counter/len(sampleSplit)
