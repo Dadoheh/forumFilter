@@ -1,4 +1,6 @@
 import pandas as pd
+import CalculateToxicity.py 
+
 
 class TrainDB:
     @staticmethod
