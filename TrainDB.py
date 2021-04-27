@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import CalculateToxicity
+import framesWithLocals
 
 #main training and checking class
 class TrainDB:
@@ -13,26 +13,26 @@ class TrainDB:
 
 
     @staticmethod
-    def checkingPotentialThres():
-        potentialThreshold = list(np.arange(0.20, 0.86, 0.06))
-        potentialThreshold
-        bestThresholds = {}
-        badCom = 0
+    def checkingPotentialThres(tmpThres):
+        matches = 0
         for j in range(len(toxicBoardToTraining) - 1):
             sample = toxicBoardToTraining['comment_text'][j]
-            print(
+            """print(
                 "Sentence: {}\nVulgarity factor: {}".format(sample, framesWithLocals.Voting.voting(sample.lower(),
-                                                                                                potentialThreshold[0])))
-            if toxicBoardToTraining['toxic'][j] > 0:
-                badCom += 1
-                print("BAD_FORMAT############{}####\n\n".format(badCom))
-            accuracy = badCom / len(toxicBoardToTraining)
-            print("ACCURACY############{}####".format(accuracy))
+                                                            potentialThreshold[0])))"""
+            test, badBool = (framesWithLocals.Voting.voting(sample.lower(), tmpThres)) #potentialThres[0]
+            print("Sentence: {}\nVulgarity factor: {}".format(sample, test))
+            # below expression will be simplified
+            if (toxicBoardToTraining['toxic'][j] > 0 and toxicBoardToTraining['severe_toxic'][j] > 0
+                and toxicBoardToTraining['obscene'][j] > 0 and toxicBoardToTraining['threat'][j] > 0
+                and toxicBoardToTraining['insult'][j] > 0 and toxicBoardToTraining['identity_hate'][j] > 0) == badBool:
+                matches += 1
+                print("BAD_FORMAT############{}####\n\n".format(matches))
 
-            # TODO #change if statement
-            # TODO (if 1 in toxic/severe_toxic... then sentence is bad
-            # TODO so if the return bad is also bad [:)] then badCom += 1
-            # TODO finally check the accuracy (badCom/len(toxicBoardTr..)
+        accuracy = matches / len(toxicBoardToTraining)
+        print("ACCURACY############{}####".format(accuracy))
+        return accuracy
+
 
 # file reading
 toxicitySeries = pd.read_csv('savedWord.csv')
@@ -56,16 +56,23 @@ for i in range(len(listOfQueries)):
 print(toxicBoardToTraining)
 
 
-TrainDB.checkingPotentialThres()
+#finding bestThreshold {thresh : acc}
+bestThresholds = {0.20: 0.62}
+potentialThreshold = list(np.arange(0.20, 0.86, 0.06))
+for l in range(1, len(potentialThreshold)):
+    print((potentialThreshold[l]))
+    acc = TrainDB.checkingPotentialThres(potentialThreshold[l])
+    bestThresholds[potentialThreshold[l]] = acc
 
+print(bestThresholds)
 
 
 #TODO
 # wybierz binarnie wartość z przedziału 'values > 0.20 and values < 0.80' - finished
 # sprawdź zgodność dla małej bazy (tysiąc komentarzy) - finished
 # potrzeba oddzielenia bazy tysiąca komentarzy (60% negatywnych, 40% pozytywnych) - finished
-# stwórz listę wartości potencjalnych thresholdów range(0.20,0.80,0.6 step)
-# oblicz accurancy dla podanej wartości z listy
-# każde sprawdzenie zapisz do słownika - wybrany_thershold : accurancy
+# stwórz listę wartości potencjalnych thresholdów range(0.20,0.80,0.6 step) - finished
+# oblicz accurancy dla podanej wartości z listy - finished
+# każde sprawdzenie zapisz do słownika - wybrany_thershold : accurancy - finished
 # wybierz maksymalną wartość
 
