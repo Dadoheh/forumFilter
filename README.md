@@ -34,7 +34,7 @@ With those values prepared we make a decision whether the text is toxic or not.
 - [x] **Start** 
 - [x] **PrepareDB**
 - [x] **CalculateToxicity** 
-- [ ] **TrainDB** :point_left: *We are currently working on this*
-- [ ] **GUI**
+- [x] **TrainDB** 
+- [ ] **GUI**  :point_left: *We are currently working on this*
 - [ ] **Speech-to-text**
 - [ ] **Finish**
