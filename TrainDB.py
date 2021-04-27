@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import framesWithLocals
+import CalculateToxicity
 
 #main training and checking class
 class TrainDB:
