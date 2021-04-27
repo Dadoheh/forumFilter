@@ -25,7 +25,7 @@ class TrainDB:
             # below expression will be simplified
             if (toxicBoardToTraining['toxic'][j] > 0 and toxicBoardToTraining['severe_toxic'][j] > 0
                 and toxicBoardToTraining['obscene'][j] > 0 and toxicBoardToTraining['threat'][j] > 0
-                and toxicBoardToTraining['insult'][j] > 0 and toxicBoardToTraining['identity_hate'][j] > 0) == badBool:
+                and toxicBoardToTraining['insult'][j] > 0 and toxicBoardToTraining['identity_hate'][j] > 0) == badBool:    # need to simplify if statement
                 matches += 1
                 print("BAD_FORMAT############{}####\n\n".format(matches))
 
