@@ -30,7 +30,8 @@ class Voting:
             result = ("Bad sentence with ", byBus, "toxicity ratio",
                     " By local")
         #print("wrong",wrong)
-        return result, badBool
+        
+        return result, badBool  # returns string with result's value and True/False state (True = toxic, False = non-toxic)
 
 
     @staticmethod   # to factorise - DRY
