@@ -52,7 +52,7 @@ toxicBoardToTraining = pd.DataFrame(columns=['id', 'comment_text', 'toxic', 'sev
 #setting training csv
 for i in range(len(listOfQueries)):
     toxicBoardToTraining = TrainDB.toxicBoardToTraining(toxicBoardToTraining, listOfQueries[i], listOfQuantity[i])
-#toxicBoardToTraining.to_csv('toxicBoardToTraining.csv')        # to csv
+#toxicBoardToTraining.to_csv('toxicBoardToTraining.csv')        
 print(toxicBoardToTraining)
 
 
