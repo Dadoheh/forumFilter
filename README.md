@@ -1,6 +1,7 @@
 # :white_check_mark:The Forum Filter:negative_squared_cross_mark:
 ## Hello Traveller! 
-It is really nice to see you here. This project is not supported from my early internship times (2020), and let's be true: This code is ugly! ;) Therefore I would like to invite you to my latest project, when I am presenting my actual skills: https://github.com/Dadoheh/pic2block I am looking forward to hearing from you!
+It is really nice to see you here. This project is not supported from my early internship times (2020), and let's be true: This code is ugly! I am promising to myself that I will improve the code, but combining working 35h/week with extramural studies cannot let me do this... Therefore I would like to invite you to my latest project, when I am presenting my actual skills: https://github.com/Dadoheh/pic2block I am looking forward to hearing from you!
+
 
 ## About Project
 Project aim is to create a tool that recognizes **toxic behaviour** in any given comment.
